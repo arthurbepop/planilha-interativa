@@ -23,16 +23,12 @@
         body { 
             -webkit-tap-highlight-color: transparent; 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            overscroll-behavior-y: none; /* Previne efeito elástico no iOS */
+            overscroll-behavior-y: none;
         }
-        .modal-overlay { background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); }
+        .modal-overlay { background: rgba(0,0,0,0.9); backdrop-filter: blur(5px); }
         input:focus { outline: none; border-color: #2563eb !important; }
-        
-        /* Ajustes de Área Segura (Notch do iPhone) */
         .safe-area-pt { padding-top: env(safe-area-inset-top); }
         .safe-area-pb { padding-bottom: env(safe-area-inset-bottom); }
-        
-        /* Esconder scrollbar mantendo funcionalidade */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -44,7 +40,6 @@
         const { useState } = React;
 
         const App = () => {
-            // Lógica para abrir na aba do dia correto
             const getInitialTab = () => {
                 const day = new Date().getDay(); 
                 switch(day) {
@@ -57,47 +52,64 @@
             const [activeTab, setActiveTab] = useState(getInitialTab);
             const [modalExercise, setModalExercise] = useState(null);
 
-            // --- BANCO DE DADOS (Vídeos MP4 do GitHub - Rápido e Sem Bloqueio) ---
+            const handleImageError = (e) => {
+                e.target.src = "https://placehold.co/600x400/f1f5f9/94a3b8?text=Carregando...";
+                e.target.style.opacity = "0.5";
+            };
+
             const trainingData = {
                 A1: {
                     title: "A1: Superiores (Vertical)",
                     days: "Segunda-feira",
-                    focus: "Peito Superior / Costas Largura",
+                    focus: "Peito Superior / Costas Largura / Postura",
                     exercises: [
                         { 
                             name: "Supino Inclinado (Halter)", 
-                            setsA: 4, setsI: 3, reps: "10-12", wA: "14kg", wI: "6kg", 
-                            tip: "Banco a 30 graus. Sinta o peito alto.", 
-                            visual: "Deite no banco inclinado. Inicie com os halteres acima do peito.",
-                            video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Incline_Bench_Press/0.mp4"
+                            setsA: 4, setsI: 3, reps: "8-12", wA: "14kg", wI: "6kg", 
+                            tip: "Banco a 35º. Punhos levemente rodados para dentro.", 
+                            visual: "Técnica PRO: Não estenda totalmente os cotovelos no topo (Lockout). Pare um pouco antes para manter a tensão contínua no peitoral. Desça controlando o alongamento.",
+                            activation: { primary: "Peitoral Maior (Feixe Clavicular)", secondary: "Deltoide Anterior, Tríceps" },
+                            gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Incline-Dumbbell-Press.gif"
                         },
                         { 
                             name: "Puxada Alta (Polia)", 
                             setsA: 4, setsI: 3, reps: "10-12", wA: "40kg", wI: "20kg", 
-                            tip: "Cotovelos para baixo. V-Shape.", 
-                            visual: "Segure a barra com pegada aberta. Puxe em direção ao peito.",
-                            video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Lat_Pulldown/0.mp4"
+                            tip: "Use as mãos como ganchos (pegada falsa).", 
+                            visual: "Esqueça o bíceps. Imagine que seus cotovelos estão sendo puxados para baixo em direção aos bolsos de trás da calça. Mantenha o peito estufado o tempo todo.",
+                            activation: { primary: "Latíssimo do Dorso (Grande Dorsal)", secondary: "Bíceps, Redondo Maior" },
+                            gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Lat-Pulldown.gif"
                         },
                         { 
                             name: "Desenvolvimento (Halter)", 
                             setsA: 4, setsI: 3, reps: "8-10", wA: "12kg", wI: "5kg", 
-                            tip: "Ombros largos. Core travado.", 
-                            visual: "Sentado, empurre os halteres verticalmente até quase esticar os braços.",
-                            video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Shoulder_Press/0.mp4"
+                            tip: "Plano Escapular: Cotovelos levemente à frente.", 
+                            visual: "Nunca deixe os cotovelos totalmente abertos (90º), isso destrói o manguito. Feche-os levemente (30º para frente). Empurre explodindo e desça controlando.",
+                            activation: { primary: "Deltoide Anterior", secondary: "Deltoide Lateral, Tríceps" },
+                            gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Shoulder-Press.gif"
+                        },
+                        { 
+                            name: "Face Pulls (Polia Alta)", 
+                            setsA: 3, setsI: 2, reps: "15-20", wA: "15kg", wI: "10kg", 
+                            tip: "O peso não importa, a rotação sim.", 
+                            visual: "Puxe a corda em direção aos olhos, abrindo os cotovelos e girando as mãos para trás (como um 'Duplo Bíceps'). Segure 2 segundos atrás. Isso corrige seus ombros rodados.",
+                            activation: { primary: "Deltóide Posterior e Manguito", secondary: "Trapézio, Rombóides" },
+                            gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Face-Pull.gif" 
                         },
                         { 
                             name: "Tríceps Corda", 
                             setsA: 3, setsI: 2, reps: "12-15", wA: "15kg", wI: "8kg", 
-                            tip: "Abra a corda no final.", 
-                            visual: "Polia alta. Cotovelos colados ao corpo. Estenda o braço para baixo.",
-                            video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Triceps_Pushdown_(rope)/0.mp4" 
+                            tip: "Não empurre para baixo, tente 'rasgar' a corda.", 
+                            visual: "Ombros travados. No final do movimento, gire o punho para fora esmagando a cabeça lateral do tríceps. Controle a volta sem deixar o cotovelo subir.",
+                            activation: { primary: "Tríceps Braquial (Lateral)", secondary: "Ancôneo" },
+                            gif: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Rope-Pushdown.gif" // Link corrigido
                         },
                         { 
                             name: "Abdominal Supra", 
                             setsA: 3, setsI: 3, reps: "15-20", wA: "Corpo", wI: "Corpo", 
-                            tip: "Solte todo o ar na subida.", 
-                            visual: "Deitado, tire apenas as omoplatas do chão contraindo o abdómen.",
-                            video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Crunch/0.mp4"
+                            tip: "Esvazie o pulmão totalmente ao subir.", 
+                            visual: "O segredo não é subir muito, mas enrolar a coluna aproximando as costelas da pelve. Se o pescoço doer, a força está no lugar errado.",
+                            activation: { primary: "Reto Abdominal (Superior)", secondary: "Oblíquos" },
+                            gif: "https://fitnessprogramer.com/wp-content/uploads/2015/11/Crunch.gif"
                         }
                     ]
                 },
@@ -109,30 +121,42 @@
                         { 
                             name: "Agachamento Goblet", 
                             setsA: 3, setsI: 4, reps: "10-12", wA: "18kg", wI: "10kg", 
-                            tip: "Peso no peito, desça fundo.", 
-                            visual: "Segure o halter no peito. Pés afastados. Agache jogando o quadril para trás.",
-                            video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Goblet_Squat/0.mp4" 
+                            tip: "Cotovelos por dentro dos joelhos no fundo.", 
+                            visual: "Use o halter como contrapeso para não cair para trás. Isso permite descer mais fundo (maior amplitude). Mantenha a tensão no calcanhar.",
+                            activation: { primary: "Quadríceps", secondary: "Glúteo Máximo, Core" },
+                            gif: "https://fitnessprogramer.com/wp-content/uploads/2023/01/Dumbbell-Goblet-Squat.gif" 
                         },
                         { 
                             name: "Leg Press 45º", 
                             setsA: 3, setsI: 4, reps: "12", wA: "100kg", wI: "60kg", 
-                            tip: "Pés no centro. Foco na coxa.", 
-                            visual: "Empurre a plataforma com a força dos calcanhares. Controle a descida.",
-                            video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Sled_45_Degrees_Leg_Press/0.mp4"
+                            tip: "Segure nos apoios e PUXE seu corpo contra o banco.", 
+                            visual: "Isso evita que o quadril levante (Butt Wink), protegendo a lombar. Pés mais baixos na plataforma focam no quadríceps. Não estique o joelho totalmente.",
+                            activation: { primary: "Quadríceps", secondary: "Glúteo Máximo" },
+                            gif: "https://fitnessprogramer.com/wp-content/uploads/2015/11/Leg-Press.gif" 
                         },
                         { 
                             name: "Cadeira Extensora", 
                             setsA: 3, setsI: 3, reps: "12-15", wA: "30kg", wI: "15kg", 
-                            tip: "Segure 1s no topo.", 
-                            visual: "Sentado, estenda os joelhos completamente contraindo a coxa.",
-                            video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lever_Leg_Extension/0.mp4"
+                            tip: "Dorsiflexão: Puxe a ponta do pé para a canela.", 
+                            visual: "Isso aumenta a ativação do reto femoral. Segure 2 segundos no topo em toda repetição. É aqui que o detalhe da coxa é construído.",
+                            activation: { primary: "Quadríceps (Reto Femoral)", secondary: "Vastos" },
+                            gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/LEG-EXTENSION.gif" 
+                        },
+                        { 
+                            name: "Cadeira Adutora", 
+                            setsA: 3, setsI: 3, reps: "15-20", wA: "30kg", wI: "20kg", 
+                            tip: "Aperte os joelhos um contra o outro.", 
+                            visual: "Mantenha o tronco firme no banco. Feche as pernas com força e segure 1 segundo no centro. Controle a abertura sem deixar o peso bater.",
+                            activation: { primary: "Adutores (Parte Interna)", secondary: "Grácil" },
+                            gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Lever-Seated-Hip-Adduction.gif" 
                         },
                         { 
                             name: "Panturrilha em Pé", 
                             setsA: 4, setsI: 4, reps: "15-20", wA: "Corpo", wI: "Corpo", 
-                            tip: "Amplitude máxima.", 
-                            visual: "Na ponta de um degrau. Desça o calcanhar até alongar tudo e suba.",
-                            video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lever_Standing_Calf_Raise/0.mp4"
+                            tip: "Pausa de 2 segundos na posição alongada.", 
+                            visual: "O tendão de Aquiles é uma mola. Pare lá embaixo para tirar o impulso e obrigar o músculo a trabalhar de verdade.",
+                            activation: { primary: "Gastrocnêmio", secondary: "Sóleo" },
+                            gif: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Standing-Calf-Raise.gif" 
                         }
                     ]
                 },
@@ -141,10 +165,10 @@
                     days: "Quarta-feira",
                     focus: "Cardio Leve, Mobilidade e Core",
                     exercises: [
-                        { name: "Bicicleta / Elíptico", setsA: "20-30", setsI: "min", reps: "Leve", wA: "-", wI: "-", tip: "Sem resistência pesada.", visual: "Mantenham um ritmo confortável.", video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Walk_Elliptical_Cross_Trainer/0.mp4" },
-                        { name: "Manguito Rotador", setsA: "3x", setsI: "3x", reps: "15", wA: "Leve", wI: "Leve", tip: "Prevenção de lesão.", visual: "Cole o cotovelo na cintura e rode o braço para fora.", video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_External_Rotation/0.mp4" },
-                        { name: "Mobilidade Torácica", setsA: "3x", setsI: "3x", reps: "10", wA: "-", wI: "-", tip: "Melhora a postura.", visual: "Ajoelhado de frente para um banco, apoie os cotovelos e deixe o peito descer.", video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kneeling_Lat_Stretch/0.mp4" },
-                        { name: "Prancha Abdominal", setsA: "3x", setsI: "3x", reps: "45s", wA: "Core", wI: "Core", tip: "Contraia glúteos.", visual: "Apoie antebraços e ponta dos pés. Mantenha o corpo reto.", video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plank/0.mp4" }
+                        { name: "Bicicleta / Elíptico", setsA: "20-30", setsI: "min", reps: "Leve", wA: "-", wI: "-", tip: "Apenas fluxo sanguíneo, sem fadiga.", visual: "Mantenha o ritmo conversacional. Ajuda a remover metabólitos acumulados no treino de perna (flush).", activation: { primary: "Cardio", secondary: "Pernas (Leve)" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/10/Elliptical-Machine.gif" },
+                        { name: "Manguito Rotador", setsA: "3x", setsI: "3x", reps: "15", wA: "Leve", wI: "Leve", tip: "Use uma toalha entre o cotovelo e a costela.", visual: "O cotovelo não pode desencostar da toalha. Movimento curto de rotação externa para blindar o ombro.", activation: { primary: "Infraespinhal", secondary: "Redondo Menor" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Cable-External-Shoulder-Rotation.gif" },
+                        { name: "Rotação Torácica", setsA: "3x", setsI: "3x", reps: "10/lado", wA: "-", wI: "-", tip: "Olhe para a mão que está girando.", visual: "Deitado de lado, gire o tronco tentando encostar o ombro oposto no chão. Solte o ar na rotação.", activation: { primary: "Mobilidade Torácica", secondary: "Peitoral" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2022/12/Supine-Spinal-Twist.gif" },
+                        { name: "Prancha Abdominal", setsA: "3x", setsI: "3x", reps: "45s", wA: "Core", wI: "Core", tip: "Tente arrastar os cotovelos para os pés.", visual: "Isso cria uma tensão isométrica brutal. Contraia glúteos para travar a coluna. Não deixe a lombar afundar.", activation: { primary: "Transverso Abdômen", secondary: "Core Completo" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/plank.gif" }
                     ]
                 },
                 A2: {
@@ -152,11 +176,14 @@
                     days: "Quinta-feira",
                     focus: "Costas Detalhe / Ombros / Bíceps",
                     exercises: [
-                        { name: "Remada Baixa", setsA: 4, setsI: 3, reps: "12-15", wA: "35kg", wI: "18kg", tip: "Aperte as escápulas.", visual: "Sentado, puxe o triângulo no umbigo.", video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Seated_Row/0.mp4" },
-                        { name: "Voador / Peck Deck", setsA: 3, setsI: 2, reps: "12-15", wA: "30kg", wI: "15kg", tip: "Isolamento de peito.", visual: "Cotovelos na altura dos ombros. Feche os braços no centro.", video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lever_Pec_Deck_Fly/0.mp4" },
-                        { name: "Elevação Lateral", setsA: 4, setsI: 2, reps: "12-15", wA: "7kg", wI: "3kg", tip: "Não suba acima do ombro.", visual: "Em pé, abra os braços lateralmente como asas.", video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Lateral_Raise/0.mp4" },
-                        { name: "Rosca Martelo", setsA: 3, setsI: 2, reps: "10-12", wA: "10kg", wI: "4kg", tip: "Pegada neutra.", visual: "Halteres na mão, palma virada para dentro. Suba o peso.", video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Hammer_Curl/0.mp4" },
-                        { name: "Prancha Abdominal", setsA: "3x", setsI: "3x", reps: "Falha", wA: "-", wI: "-", tip: "Umbigo para dentro.", visual: "Mantenha o corpo alinhado e contraia o abdómen.", video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plank/0.mp4" }
+                        { name: "Remada Baixa", setsA: 4, setsI: 3, reps: "12-15", wA: "35kg", wI: "18kg", tip: "Alongue bem na frente.", visual: "Deixe o peso puxar seus ombros para frente (alongando a dorsal) e inicie a puxada retraindo as escápulas.", activation: { primary: "Trapézio/Romboides", secondary: "Latíssimo do Dorso" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Seated-Cable-Row.gif" },
+                        { name: "Voador / Peck Deck", setsA: 3, setsI: 2, reps: "12-15", wA: "30kg", wI: "15kg", tip: "Cotovelos altos e peito estufado.", visual: "Mantenha as escápulas coladas no banco. Imagine que quer esmagar uma caneta no meio do peito no final do movimento.", activation: { primary: "Peitoral Maior", secondary: "Deltoide Anterior" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Pec-Deck-Fly.gif" },
+                        
+                        { name: "Crucifixo Cabo (Polia Média)", setsA: 3, setsI: 2, reps: "12-15", wA: "15kg", wI: "5kg", tip: "Pico de Contração: Segure 1s fechado.", visual: "Tronco levemente à frente. Abra bem os braços para alongar (stretch) e feche cruzando as mãos para esmagar o miolo do peito.", activation: { primary: "Peitoral (Esternal)", secondary: "Deltoide Anterior" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Cable-Crossover.gif" },
+                        
+                        { name: "Elevação Lateral", setsA: 4, setsI: 2, reps: "12-15", wA: "7kg", wI: "3kg", tip: "Jogue o peso para longe, não para cima.", visual: "Imagine tocar as paredes laterais. O cotovelo lidera o movimento. Pare na altura do ombro.", activation: { primary: "Deltoide Lateral", secondary: "Trapézio" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lateral-Raise.gif" },
+                        { name: "Rosca Martelo", setsA: 3, setsI: 2, reps: "10-12", wA: "10kg", wI: "4kg", tip: "Aperte o halter com força máxima.", visual: "A força na pegada aumenta a ativação do braquial. Mantenha o cotovelo fixo ao lado do corpo.", activation: { primary: "Braquial", secondary: "Bíceps, Antebraço" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Hammer-Curl.gif" },
+                        { name: "Prancha Abdominal", setsA: "3x", setsI: "3x", reps: "Falha", wA: "-", wI: "-", tip: "Respiração curta e abdômen travado.", visual: "Mantenha o alinhamento total. Se estiver fácil, estique os braços mais à frente.", activation: { primary: "Core", secondary: "-" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/plank.gif" }
                     ]
                 },
                 B2: {
@@ -164,10 +191,10 @@
                     days: "Sexta-feira",
                     focus: "Glúteos e Posterior (Foco Isabella)",
                     exercises: [
-                        { name: "Elevação Pélvica", setsA: 0, setsI: 4, reps: "10-12", wA: "N/A", wI: "30kg", tip: "Contraia o glúteo no topo.", visual: "Suba até alinhar o corpo e esmague o glúteo.", video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Hip_Thrust/0.mp4" },
-                        { name: "Stiff (Halter)", setsA: 3, setsI: 4, reps: "10-12", wA: "14kg", wI: "8kg", tip: "Coluna travada e reta.", visual: "Pernas semi-flexionadas. Desça o tronco jogando o quadril para trás.", video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Stiff_Leg_Deadlift/0.mp4" },
-                        { name: "Mesa Flexora", setsA: 3, setsI: 3, reps: "12-15", wA: "20kg", wI: "12kg", tip: "Não levante o quadril.", visual: "Deitado, puxe o peso em direção ao glúteo.", video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lever_Lying_Leg_Curl/0.mp4" },
-                        { name: "Cadeira Abdutora", setsA: 3, setsI: 4, reps: "15-20", wA: "30kg", wI: "25kg", tip: "Tronco levemente à frente.", visual: "Afaste as pernas empurrando os apoios para fora.", video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lever_Seated_Hip_Abduction/0.mp4" }
+                        { name: "Elevação Pélvica", setsA: 0, setsI: 4, reps: "10-12", wA: "N/A", wI: "30kg", tip: "Olhe para frente, queixo no peito.", visual: "Trava a lombar e obriga o glúteo a trabalhar. Suba até a contração máxima do glúteo.", activation: { primary: "Glúteo Máximo", secondary: "Posterior de Coxa" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Hip-Thrust.gif" },
+                        { name: "Stiff (Barra)", setsA: 3, setsI: 4, reps: "10-12", wA: "14kg", wI: "8kg", tip: "Barra raspando na perna.", visual: "Jogue o quadril para trás como se fosse fechar uma porta com o bumbum. Desça até sentir o posterior 'gritar'.", activation: { primary: "Posterior de Coxa", secondary: "Glúteo, Lombar" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2022/01/Stiff-Leg-Deadlift.gif" },
+                        { name: "Mesa Flexora", setsA: 3, setsI: 3, reps: "12-15", wA: "20kg", wI: "12kg", tip: "Quadril colado no banco.", visual: "Não deixe o bumbum empinar ao subir o peso. Controle a descida em 4 segundos.", activation: { primary: "Posterior de Coxa", secondary: "Panturrilha" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Leg-Curl.gif" },
+                        { name: "Cadeira Abdutora", setsA: 3, setsI: 4, reps: "15-20", wA: "30kg", wI: "25kg", tip: "Incline o tronco à frente.", visual: "Abra tudo o que der, segure 1 segundo e volte devagar. Inclinar aumenta o foco no glúteo.", activation: { primary: "Glúteo Médio", secondary: "Tensor da Fáscia Lata" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/HiP-ABDUCTION-MACHINE.gif" }
                     ]
                 },
                 Rest2: {
@@ -175,12 +202,12 @@
                     days: "Sábado",
                     focus: "Cardio Moderado e Alongamento",
                     exercises: [
-                        { name: "Remo / Esteira", setsA: "20", setsI: "min", reps: "Médio", wA: "-", wI: "-", tip: "Aquecimento geral.", visual: "Objetivo é transpirar sem exaustão.", video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Run/0.mp4" },
-                        { name: "Abdominal Infra", setsA: "3x", setsI: "3x", reps: "12-15", wA: "Corpo", wI: "Corpo", tip: "Foco na parte inferior.", visual: "Elevem os joelhos em direção ao peito.", video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Leg_Raise_Flat_Bench/0.mp4" },
-                        { name: "Face Pulls", setsA: "3x", setsI: "3x", reps: "15", wA: "Leve", wI: "Leve", tip: "Puxe para a testa.", visual: "Puxem em direção à testa, abrindo os cotovelos.", video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Standing_Face_Pull_with_Rope/0.mp4" },
-                        { name: "Along. Posterior", setsA: "2x", setsI: "2x", reps: "45s", wA: "-", wI: "-", tip: "Relaxe a respiração.", visual: "Sentados, inclinem o tronco à frente tentando tocar nos pés.", video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Hamstring_Stretch/0.mp4" },
-                        { name: "Along. Glúteo", setsA: "2x", setsI: "2x", reps: "45s", wA: "-", wI: "-", tip: "Alivia dores na lombar.", visual: "Cruzem uma perna sobre o joelho oposto e puxem.", video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Glute_Stretch/0.mp4" },
-                        { name: "Postura Criança", setsA: "2x", setsI: "2x", reps: "60s", wA: "-", wI: "-", tip: "Alongamento total.", visual: "Ajoelhados, baixem a testa no chão e estiquem os braços.", video: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kneeling_Lat_Stretch/0.mp4" }
+                        { name: "Remo / Esteira", setsA: "20", setsI: "min", reps: "Médio", wA: "-", wI: "-", tip: "Aquecimento geral.", visual: "20 minutos para elevar a temperatura corporal antes dos alongamentos.", activation: { primary: "Cardio", secondary: "-" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/07/Run.gif" },
+                        { name: "Abdominal Infra", setsA: "3x", setsI: "3x", reps: "12-15", wA: "Corpo", wI: "Corpo", tip: "Tire o quadril do chão.", visual: "Enrole a bacia para cima. Não deixe a lombar arquear na descida.", activation: { primary: "Reto Abdominal (Inf)", secondary: "Flexores Quadril" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Lying-Leg-Raise.gif" }, 
+                        { name: "Face Pulls", setsA: "3x", setsI: "3x", reps: "15", wA: "Leve", wI: "Leve", tip: "Puxe para a testa.", visual: "Abra os cotovelos e gire as mãos para trás. Segure 1s. Essencial para postura.", activation: { primary: "Deltoide Posterior", secondary: "Manguito" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Face-Pull.gif" },
+                        { name: "Along. Posterior", setsA: "2x", setsI: "2x", reps: "45s", wA: "-", wI: "-", tip: "Relaxe na expiração.", visual: "Tente descer mais a cada vez que soltar o ar.", activation: { primary: "Isquiotibiais", secondary: "Lombar" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/05/Seated-Hamstring-Stretch.gif" },
+                        { name: "Along. Glúteo", setsA: "2x", setsI: "2x", reps: "45s", wA: "-", wI: "-", tip: "Abrace a perna.", visual: "Puxe a perna de base contra o peito para sentir o glúteo da perna cruzada.", activation: { primary: "Glúteo", secondary: "Piriforme" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/08/Lying-glute-stretch.gif" }, 
+                        { name: "Postura Criança", setsA: "2x", setsI: "2x", reps: "60s", wA: "-", wI: "-", tip: "Caminhe com os dedos.", visual: "Sente nos calcanhares e estique os braços à frente para descomprimir a coluna.", activation: { primary: "Lombar/Dorsal", secondary: "-" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2022/05/Balasana-Child-Pose.gif" } 
                     ]
                 }
             };
@@ -190,33 +217,20 @@
             return (
                 <div className="max-w-md mx-auto p-4 pb-32 min-h-screen flex flex-col">
                     
-                    {/* Header */}
                     <div className="mb-6 pt-4 text-center">
                         <h1 className="text-2xl font-black text-slate-800 tracking-tighter uppercase leading-none">Planejamento de Treino</h1>
                         <p className="text-xs font-bold text-slate-400 uppercase mt-1">Arthur & Isabella</p>
                     </div>
 
-                    {/* Navigation Tabs (2 Columns) */}
                     <div className="grid grid-cols-2 gap-2 mb-4">
                         {['A1', 'B1', 'Rest1', 'A2', 'B2', 'Rest2'].map((tab) => {
                             const labels = { A1: 'Segunda', B1: 'Terça', Rest1: 'Quarta', A2: 'Quinta', B2: 'Sexta', Rest2: 'Sábado' };
-                            const colors = { 
-                                A1: 'blue', B1: 'indigo', Rest1: 'emerald', 
-                                A2: 'sky', B2: 'purple', Rest2: 'orange' 
-                            };
+                            const colors = { A1: 'blue', B1: 'indigo', Rest1: 'emerald', A2: 'sky', B2: 'purple', Rest2: 'orange' };
                             const isActive = activeTab === tab;
                             const c = colors[tab];
                             
                             return (
-                                <button 
-                                    key={tab}
-                                    onClick={() => setActiveTab(tab)} 
-                                    className={`p-3 rounded-xl font-black text-xs transition-all border 
-                                        ${isActive 
-                                            ? `bg-${c}-600 text-white border-${c}-600 shadow-md` 
-                                            : `bg-white text-slate-500 border-slate-200 shadow-sm`
-                                        }`}
-                                >
+                                <button key={tab} onClick={() => setActiveTab(tab)} className={`p-3 rounded-xl font-black text-xs transition-all border ${isActive ? `bg-${c}-600 text-white border-${c}-600 shadow-md` : `bg-white text-slate-500 border-slate-200 shadow-sm`}`}>
                                     {tab === 'Rest1' ? 'Descanso' : (tab === 'Rest2' ? 'Opcional' : tab)} 
                                     <span className="opacity-70 font-normal ml-1">{labels[tab]}</span>
                                 </button>
@@ -224,7 +238,6 @@
                         })}
                     </div>
 
-                    {/* Card Principal */}
                     <div className="bg-white rounded-2xl overflow-hidden shadow-lg border border-slate-100 flex-1">
                         <div className="p-4 bg-slate-50 border-b border-slate-100">
                             <h2 className="text-sm font-black text-slate-800 uppercase">{cur.title}</h2>
@@ -243,7 +256,6 @@
                                 <tbody className="divide-y divide-slate-50">
                                     {cur.exercises.map((ex, i) => (
                                         <tr key={i} className="hover:bg-slate-50 transition-colors">
-                                            {/* Nome e Reps */}
                                             <td className="p-3 align-middle">
                                                 <div className="text-xs font-extrabold text-slate-800 leading-tight">{ex.name}</div>
                                                 {(activeTab !== 'Rest1' && activeTab !== 'Rest2') && (
@@ -255,7 +267,6 @@
                                                     <div className="text-[9px] text-emerald-600 font-bold mt-1 bg-emerald-50 inline-block px-1.5 py-0.5 rounded">Recuperação</div>
                                                 )}
                                             </td>
-                                            {/* Inputs de Carga */}
                                             <td className="p-3 align-middle">
                                                 <div className="flex flex-col gap-1.5">
                                                     {(activeTab !== 'Rest1' && activeTab !== 'Rest2') ? (
@@ -274,7 +285,6 @@
                                                     )}
                                                 </div>
                                             </td>
-                                            {/* Botão Modal */}
                                             <td className="p-3 text-center align-middle">
                                                 <button onClick={() => setModalExercise(ex)} className="w-8 h-8 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100 active:scale-95 transition-all">
                                                     👁️
@@ -287,7 +297,6 @@
                         </div>
                     </div>
 
-                    {/* Cardio Cards */}
                     {(activeTab !== 'Rest1' && activeTab !== 'Rest2') && (
                         <div className="grid grid-cols-2 gap-2 mt-4">
                             <div className="bg-sky-50 p-3 rounded-xl border border-sky-100">
@@ -303,29 +312,24 @@
                         </div>
                     )}
 
-                    {/* --- MODAL (MP4) --- */}
                     {modalExercise && (
                         <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-6 animate-in fade-in duration-200">
                             <div className="absolute inset-0 modal-overlay" onClick={() => setModalExercise(null)}></div>
-                            
                             <div className="relative bg-white w-full max-w-sm rounded-[2rem] shadow-2xl p-6 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto no-scrollbar">
-                                
                                 <div className="flex justify-between items-start mb-4">
                                     <h3 className="text-lg font-black text-slate-800 leading-tight pr-4">{modalExercise.name}</h3>
                                     <button onClick={() => setModalExercise(null)} className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 text-sm font-bold">✕</button>
                                 </div>
                                 
                                 <div className="space-y-4">
-                                    {/* PLAYER DE VÍDEO DO GITHUB */}
-                                    {modalExercise.video && (
-                                        <div className="rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shadow-sm flex items-center justify-center bg-black">
-                                            <video 
-                                                src={modalExercise.video} 
-                                                className="w-full max-h-[300px] object-cover" 
-                                                autoPlay 
-                                                loop 
-                                                muted 
-                                                playsInline
+                                    {modalExercise.gif && (
+                                        <div className="rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shadow-sm flex items-center justify-center min-h-[250px]">
+                                            <img 
+                                                src={modalExercise.gif} 
+                                                className="w-full max-h-[300px] object-contain" 
+                                                alt={modalExercise.name}
+                                                loading="lazy"
+                                                onError={handleImageError}
                                             />
                                         </div>
                                     )}
@@ -338,8 +342,29 @@
                                         <p className="text-[10px] font-black text-amber-700 uppercase mb-1">💡 Dica Pro</p>
                                         <p className="text-xs text-amber-900 font-bold leading-relaxed">"{modalExercise.tip}"</p>
                                     </div>
-                                </div>
 
+                                    {modalExercise.activation && (
+                                        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Ativação Muscular</p>
+                                            <div className="space-y-2">
+                                                <div className="flex items-start gap-2">
+                                                    <span className="text-xs mt-0.5">🎯</span>
+                                                    <div>
+                                                        <span className="text-[10px] font-bold text-slate-500 uppercase block">Principal</span>
+                                                        <span className="text-xs font-bold text-slate-800">{modalExercise.activation.primary}</span>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-start gap-2">
+                                                    <span className="text-xs mt-0.5">🤝</span>
+                                                    <div>
+                                                        <span className="text-[10px] font-bold text-slate-500 uppercase block">Auxiliar</span>
+                                                        <span className="text-xs text-slate-600">{modalExercise.activation.secondary}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                                 <button onClick={() => setModalExercise(null)} className="w-full mt-6 py-3.5 bg-slate-900 text-white text-xs font-black uppercase tracking-widest rounded-xl shadow-lg active:scale-95 transition-all">
                                     Fechar
                                 </button>
