@@ -12,7 +12,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Treino Hub">
     
-    <title>Planejamento de Treino</title>
+    <title>Treino Hub - Arthur & Isabella</title>
     
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -59,155 +59,66 @@
 
             const trainingData = {
                 A1: {
-                    title: "A1: Superiores (Vertical)",
+                    title: "A1: Volume & Potência (Vertical)",
                     days: "Segunda-feira",
-                    focus: "Peito Superior / Costas Largura / Postura",
+                    focus: "Hipertrofia Miofibrilar / Preensão",
                     exercises: [
-                        { 
-                            name: "Supino Inclinado (Halter)", 
-                            setsA: 4, setsI: 3, reps: "8-12", wA: "14kg", wI: "6kg", 
-                            tip: "Banco a 35º. Punhos levemente rodados para dentro.", 
-                            visual: "Técnica PRO: Não estenda totalmente os cotovelos no topo (Lockout). Pare um pouco antes para manter a tensão contínua no peitoral. Desça controlando o alongamento.",
-                            activation: { primary: "Peitoral Maior (Feixe Clavicular)", secondary: "Deltoide Anterior, Tríceps" },
-                            gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Incline-Dumbbell-Press.gif"
-                        },
-                        { 
-                            name: "Puxada Alta (Polia)", 
-                            setsA: 4, setsI: 3, reps: "10-12", wA: "40kg", wI: "20kg", 
-                            tip: "Use as mãos como ganchos (pegada falsa).", 
-                            visual: "Esqueça o bíceps. Imagine que seus cotovelos estão sendo puxados para baixo em direção aos bolsos de trás da calça. Mantenha o peito estufado o tempo todo.",
-                            activation: { primary: "Latíssimo do Dorso (Grande Dorsal)", secondary: "Bíceps, Redondo Maior" },
-                            gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Lat-Pulldown.gif"
-                        },
-                        { 
-                            name: "Desenvolvimento (Halter)", 
-                            setsA: 4, setsI: 3, reps: "8-10", wA: "12kg", wI: "5kg", 
-                            tip: "Plano Escapular: Cotovelos levemente à frente.", 
-                            visual: "Nunca deixe os cotovelos totalmente abertos (90º), isso destrói o manguito. Feche-os levemente (30º para frente). Empurre explodindo e desça controlando.",
-                            activation: { primary: "Deltoide Anterior", secondary: "Deltoide Lateral, Tríceps" },
-                            gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Shoulder-Press.gif"
-                        },
-                        { 
-                            name: "Face Pulls (Polia Alta)", 
-                            setsA: 3, setsI: 2, reps: "15-20", wA: "15kg", wI: "10kg", 
-                            tip: "O peso não importa, a rotação sim.", 
-                            visual: "Puxe a corda em direção aos olhos, abrindo os cotovelos e girando as mãos para trás (como um 'Duplo Bíceps'). Segure 2 segundos atrás. Isso corrige seus ombros rodados.",
-                            activation: { primary: "Deltóide Posterior e Manguito", secondary: "Trapézio, Rombóides" },
-                            gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Face-Pull.gif" 
-                        },
-                        { 
-                            name: "Tríceps Corda", 
-                            setsA: 3, setsI: 2, reps: "12-15", wA: "15kg", wI: "8kg", 
-                            tip: "Não empurre para baixo, tente 'rasgar' a corda.", 
-                            visual: "Ombros travados. No final do movimento, gire o punho para fora esmagando a cabeça lateral do tríceps. Controle a volta sem deixar o cotovelo subir.",
-                            activation: { primary: "Tríceps Braquial (Lateral)", secondary: "Ancôneo" },
-                            gif: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Rope-Pushdown.gif" // Link corrigido
-                        },
-                        { 
-                            name: "Abdominal Supra", 
-                            setsA: 3, setsI: 3, reps: "15-20", wA: "Corpo", wI: "Corpo", 
-                            tip: "Esvazie o pulmão totalmente ao subir.", 
-                            visual: "O segredo não é subir muito, mas enrolar a coluna aproximando as costelas da pelve. Se o pescoço doer, a força está no lugar errado.",
-                            activation: { primary: "Reto Abdominal (Superior)", secondary: "Oblíquos" },
-                            gif: "https://fitnessprogramer.com/wp-content/uploads/2015/11/Crunch.gif"
-                        }
+                        { name: "Supino Inclinado (Halter)", setsA: 4, setsI: 4, reps: "8-10", wA: "14kg", wI: "6kg", tip: "Foco na carga. Isabella: Manter 4 séries para volume.", visual: "Pare antes do lockout para manter tensão no peitoral.", activation: { primary: "Peitoral Superior", secondary: "Tríceps" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Incline-Dumbbell-Press.gif" },
+                        { name: "Puxada Alta (Pegada Ganchos)", setsA: 4, setsI: 4, reps: "10-12", wA: "40kg", wI: "20kg", tip: "Isabella: Use carga que cause falha na 12ª rep.", visual: "Polegar por cima da barra libera o antebraço para focar na dorsal.", activation: { primary: "Latíssimo do Dorso", secondary: "Braquiorradial" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Lat-Pulldown.gif" },
+                        { name: "Dead Hang (Pés Apoiados)", setsA: 3, setsI: 3, reps: "45s", wA: "Corpo", wI: "Corpo", tip: "Mantenha a ponta dos pés no chão se precisar.", visual: "Essencial para não deixar a pegada falhar antes das costas.", activation: { primary: "Grip (Preensão)", secondary: "Antebraço" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Shoulder-Press.gif" },
+                        { name: "Desenvolvimento (Halter)", setsA: 4, setsI: 4, reps: "8-10", wA: "12kg", wI: "5kg", tip: "Controle a descida lenta.", visual: "Isabella: 4 séries aqui garantem ombros marcados.", activation: { primary: "Deltoide Anterior", secondary: "Tríceps" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Shoulder-Press.gif" },
+                        { name: "Tríceps Corda", setsA: 4, setsI: 4, reps: "10-12", wA: "15kg", wI: "8kg", tip: "Esmague o tríceps no final do movimento.", visual: "Cotovelos travados como dobradiças.", activation: { primary: "Tríceps", secondary: "-" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Rope-Pushdown.gif" }
                     ]
                 },
                 B1: {
                     title: "B1: Inferiores (Quadríceps)",
                     days: "Terça-feira",
-                    focus: "Coxas e Agachamento",
+                    focus: "Base de Força & Taxa Metabólica",
                     exercises: [
-                        { 
-                            name: "Agachamento Goblet", 
-                            setsA: 3, setsI: 4, reps: "10-12", wA: "18kg", wI: "10kg", 
-                            tip: "Cotovelos por dentro dos joelhos no fundo.", 
-                            visual: "Use o halter como contrapeso para não cair para trás. Isso permite descer mais fundo (maior amplitude). Mantenha a tensão no calcanhar.",
-                            activation: { primary: "Quadríceps", secondary: "Glúteo Máximo, Core" },
-                            gif: "https://fitnessprogramer.com/wp-content/uploads/2023/01/Dumbbell-Goblet-Squat.gif" 
-                        },
-                        { 
-                            name: "Leg Press 45º", 
-                            setsA: 3, setsI: 4, reps: "12", wA: "100kg", wI: "60kg", 
-                            tip: "Segure nos apoios e PUXE seu corpo contra o banco.", 
-                            visual: "Isso evita que o quadril levante (Butt Wink), protegendo a lombar. Pés mais baixos na plataforma focam no quadríceps. Não estique o joelho totalmente.",
-                            activation: { primary: "Quadríceps", secondary: "Glúteo Máximo" },
-                            gif: "https://fitnessprogramer.com/wp-content/uploads/2015/11/Leg-Press.gif" 
-                        },
-                        { 
-                            name: "Cadeira Extensora", 
-                            setsA: 3, setsI: 3, reps: "12-15", wA: "30kg", wI: "15kg", 
-                            tip: "Dorsiflexão: Puxe a ponta do pé para a canela.", 
-                            visual: "Isso aumenta a ativação do reto femoral. Segure 2 segundos no topo em toda repetição. É aqui que o detalhe da coxa é construído.",
-                            activation: { primary: "Quadríceps (Reto Femoral)", secondary: "Vastos" },
-                            gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/LEG-EXTENSION.gif" 
-                        },
-                        { 
-                            name: "Cadeira Adutora", 
-                            setsA: 3, setsI: 3, reps: "15-20", wA: "30kg", wI: "20kg", 
-                            tip: "Aperte os joelhos um contra o outro.", 
-                            visual: "Mantenha o tronco firme no banco. Feche as pernas com força e segure 1 segundo no centro. Controle a abertura sem deixar o peso bater.",
-                            activation: { primary: "Adutores (Parte Interna)", secondary: "Grácil" },
-                            gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Lever-Seated-Hip-Adduction.gif" 
-                        },
-                        { 
-                            name: "Panturrilha em Pé", 
-                            setsA: 4, setsI: 4, reps: "15-20", wA: "Corpo", wI: "Corpo", 
-                            tip: "Pausa de 2 segundos na posição alongada.", 
-                            visual: "O tendão de Aquiles é uma mola. Pare lá embaixo para tirar o impulso e obrigar o músculo a trabalhar de verdade.",
-                            activation: { primary: "Gastrocnêmio", secondary: "Sóleo" },
-                            gif: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Standing-Calf-Raise.gif" 
-                        }
+                        { name: "Agachamento Goblet", setsA: 4, setsI: 4, reps: "10-12", wA: "18kg", wI: "10kg", tip: "Isabella: Desça o máximo que a mobilidade permitir.", visual: "Mais músculo nas pernas = metabolismo 4x mais rápido.", activation: { primary: "Quadríceps", secondary: "Glúteo" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2023/01/Dumbbell-Goblet-Squat.gif" },
+                        { name: "Leg Press 45º", setsA: 4, setsI: 4, reps: "12", wA: "100kg", wI: "60kg", tip: "Pés na parte baixa da plataforma.", visual: "Puxe as alças para colar o quadril no banco.", activation: { primary: "Quadríceps", secondary: "Glúteo" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2015/11/Leg-Press.gif" },
+                        { name: "Cadeira Extensora", setsA: 3, setsI: 3, reps: "12-15", wA: "30kg", wI: "15kg", tip: "Isabella: Segure 2s em cima (Isometria).", visual: "Desenha o 'corte' da coxa.", activation: { primary: "Quadríceps", secondary: "-" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/LEG-EXTENSION.gif" },
+                        { name: "Panturrilha em Pé", setsA: 4, setsI: 4, reps: "15-20", wA: "Corpo", wI: "Corpo", tip: "Sinta o alongamento total.", visual: "Pare 2s em baixo para tirar o impulso.", activation: { primary: "Gastrocnêmio", secondary: "Sóleo" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Standing-Calf-Raise.gif" }
                     ]
                 },
                 Rest1: {
-                    title: "Recuperação Ativa (Academia)",
+                    title: "Recuperação Ativa & Metabólico",
                     days: "Quarta-feira",
-                    focus: "Cardio Leve, Mobilidade e Core",
+                    focus: "Caminhada Intervalada (Queima Visceral)",
                     exercises: [
-                        { name: "Bicicleta / Elíptico", setsA: "20-30", setsI: "min", reps: "Leve", wA: "-", wI: "-", tip: "Apenas fluxo sanguíneo, sem fadiga.", visual: "Mantenha o ritmo conversacional. Ajuda a remover metabólitos acumulados no treino de perna (flush).", activation: { primary: "Cardio", secondary: "Pernas (Leve)" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/10/Elliptical-Machine.gif" },
-                        { name: "Manguito Rotador", setsA: "3x", setsI: "3x", reps: "15", wA: "Leve", wI: "Leve", tip: "Use uma toalha entre o cotovelo e a costela.", visual: "O cotovelo não pode desencostar da toalha. Movimento curto de rotação externa para blindar o ombro.", activation: { primary: "Infraespinhal", secondary: "Redondo Menor" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Cable-External-Shoulder-Rotation.gif" },
-                        { name: "Rotação Torácica", setsA: "3x", setsI: "3x", reps: "10/lado", wA: "-", wI: "-", tip: "Olhe para a mão que está girando.", visual: "Deitado de lado, gire o tronco tentando encostar o ombro oposto no chão. Solte o ar na rotação.", activation: { primary: "Mobilidade Torácica", secondary: "Peitoral" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2022/12/Supine-Spinal-Twist.gif" },
-                        { name: "Prancha Abdominal", setsA: "3x", setsI: "3x", reps: "45s", wA: "Core", wI: "Core", tip: "Tente arrastar os cotovelos para os pés.", visual: "Isso cria uma tensão isométrica brutal. Contraia glúteos para travar a coluna. Não deixe a lombar afundar.", activation: { primary: "Transverso Abdômen", secondary: "Core Completo" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/plank.gif" }
+                        { name: "Caminhada Intervalada", setsA: "30", setsI: "30", reps: "3/3 min", wA: "min", wI: "min", tip: "Foco total na variação de ritmo.", visual: "3 min passo normal / 3 min passo de pressa (quase corrida).", activation: { primary: "Queima de Gordura", secondary: "Metabolismo" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/10/Elliptical-Machine.gif" },
+                        { name: "Prancha Abdominal", setsA: "3x", setsI: "3x", reps: "45s", wA: "Core", wI: "Core", tip: "Isabella: Tente encostar o umbigo nas costas.", visual: "Fortalece o transverso para uma cintura mais fina.", activation: { primary: "Core", secondary: "-" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/plank.gif" }
                     ]
                 },
                 A2: {
-                    title: "A2: Superiores (Horizontal)",
+                    title: "A2: Densidade & Pump (Horizontal)",
                     days: "Quinta-feira",
-                    focus: "Costas Detalhe / Ombros / Bíceps",
+                    focus: "Hipertrofia Sarcoplasmática / Braços Detalhe",
                     exercises: [
-                        { name: "Remada Baixa", setsA: 4, setsI: 3, reps: "12-15", wA: "35kg", wI: "18kg", tip: "Alongue bem na frente.", visual: "Deixe o peso puxar seus ombros para frente (alongando a dorsal) e inicie a puxada retraindo as escápulas.", activation: { primary: "Trapézio/Romboides", secondary: "Latíssimo do Dorso" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Seated-Cable-Row.gif" },
-                        { name: "Voador / Peck Deck", setsA: 3, setsI: 2, reps: "12-15", wA: "30kg", wI: "15kg", tip: "Cotovelos altos e peito estufado.", visual: "Mantenha as escápulas coladas no banco. Imagine que quer esmagar uma caneta no meio do peito no final do movimento.", activation: { primary: "Peitoral Maior", secondary: "Deltoide Anterior" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Pec-Deck-Fly.gif" },
-                        
-                        { name: "Crucifixo Cabo (Polia Média)", setsA: 3, setsI: 2, reps: "12-15", wA: "15kg", wI: "5kg", tip: "Pico de Contração: Segure 1s fechado.", visual: "Tronco levemente à frente. Abra bem os braços para alongar (stretch) e feche cruzando as mãos para esmagar o miolo do peito.", activation: { primary: "Peitoral (Esternal)", secondary: "Deltoide Anterior" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Cable-Crossover.gif" },
-                        
-                        { name: "Elevação Lateral", setsA: 4, setsI: 2, reps: "12-15", wA: "7kg", wI: "3kg", tip: "Jogue o peso para longe, não para cima.", visual: "Imagine tocar as paredes laterais. O cotovelo lidera o movimento. Pare na altura do ombro.", activation: { primary: "Deltoide Lateral", secondary: "Trapézio" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lateral-Raise.gif" },
-                        { name: "Rosca Martelo", setsA: 3, setsI: 2, reps: "10-12", wA: "10kg", wI: "4kg", tip: "Aperte o halter com força máxima.", visual: "A força na pegada aumenta a ativação do braquial. Mantenha o cotovelo fixo ao lado do corpo.", activation: { primary: "Braquial", secondary: "Bíceps, Antebraço" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Hammer-Curl.gif" },
-                        { name: "Prancha Abdominal", setsA: "3x", setsI: "3x", reps: "Falha", wA: "-", wI: "-", tip: "Respiração curta e abdômen travado.", visual: "Mantenha o alinhamento total. Se estiver fácil, estique os braços mais à frente.", activation: { primary: "Core", secondary: "-" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/plank.gif" }
+                        { name: "Remada Baixa", setsA: 3, setsI: 3, reps: "12-15", wA: "35kg", wI: "18kg", tip: "Isabella: Menos séries, mas reps mais altas.", visual: "Esmague as costas no final da puxada.", activation: { primary: "Trapézio", secondary: "Dorsal" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Seated-Cable-Row.gif" },
+                        { name: "Voador / Peck Deck", setsA: 3, setsI: 3, reps: "12-15", wA: "30kg", wI: "15kg", tip: "Não encoste os pesos na volta.", visual: "Tensão constante no peitoral.", activation: { primary: "Peitoral", secondary: "-" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Pec-Deck-Fly.gif" },
+                        { name: "Rosca Zottman", setsA: 3, setsI: 3, reps: "10-12", wA: "8kg", wI: "4kg", tip: "Sobe (palma up), desce (palma down).", visual: "Isola o bíceps na subida e o antebraço na descida.", activation: { primary: "Bíceps e Braquiorradial", secondary: "Extensores" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Hammer-Curl.gif" },
+                        { name: "Elevação Lateral", setsA: 4, setsI: 4, reps: "15-20", wA: "7kg", wI: "3kg", tip: "Isabella: Sinta a 'queimação' no ombro.", visual: "Mãos ligeiramente à frente da linha do corpo.", activation: { primary: "Deltoide Lateral", secondary: "-" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lateral-Raise.gif" }
                     ]
                 },
                 B2: {
-                    title: "B2: Inferiores (Posterior)",
+                    title: "B2: Inferiores (Posterior & Glúteo)",
                     days: "Sexta-feira",
-                    focus: "Glúteos e Posterior (Foco Isabella)",
+                    focus: "Escultura de Posteriores",
                     exercises: [
-                        { name: "Elevação Pélvica", setsA: 0, setsI: 4, reps: "10-12", wA: "N/A", wI: "30kg", tip: "Olhe para frente, queixo no peito.", visual: "Trava a lombar e obriga o glúteo a trabalhar. Suba até a contração máxima do glúteo.", activation: { primary: "Glúteo Máximo", secondary: "Posterior de Coxa" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Hip-Thrust.gif" },
-                        { name: "Stiff (Barra)", setsA: 3, setsI: 4, reps: "10-12", wA: "14kg", wI: "8kg", tip: "Barra raspando na perna.", visual: "Jogue o quadril para trás como se fosse fechar uma porta com o bumbum. Desça até sentir o posterior 'gritar'.", activation: { primary: "Posterior de Coxa", secondary: "Glúteo, Lombar" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2022/01/Stiff-Leg-Deadlift.gif" },
-                        { name: "Mesa Flexora", setsA: 3, setsI: 3, reps: "12-15", wA: "20kg", wI: "12kg", tip: "Quadril colado no banco.", visual: "Não deixe o bumbum empinar ao subir o peso. Controle a descida em 4 segundos.", activation: { primary: "Posterior de Coxa", secondary: "Panturrilha" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Leg-Curl.gif" },
-                        { name: "Cadeira Abdutora", setsA: 3, setsI: 4, reps: "15-20", wA: "30kg", wI: "25kg", tip: "Incline o tronco à frente.", visual: "Abra tudo o que der, segure 1 segundo e volte devagar. Inclinar aumenta o foco no glúteo.", activation: { primary: "Glúteo Médio", secondary: "Tensor da Fáscia Lata" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/HiP-ABDUCTION-MACHINE.gif" }
+                        { name: "Elevação Pélvica", setsA: 0, setsI: 4, reps: "10-12", wA: "N/A", wI: "30kg", tip: "Isabella: Pico de contração de 3s no topo.", visual: "O exercício #1 para glúteos.", activation: { primary: "Glúteo Máximo", secondary: "-" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Hip-Thrust.gif" },
+                        { name: "Stiff (Barra)", setsA: 3, setsI: 4, reps: "10-12", wA: "14kg", wI: "8kg", tip: "Mantenha a barra raspando na coxa.", visual: "Alongue bem o posterior na descida.", activation: { primary: "Isquiotibiais", secondary: "Lombar" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2022/01/Stiff-Leg-Deadlift.gif" },
+                        { name: "Mesa Flexora", setsA: 3, setsI: 3, reps: "12-15", wA: "20kg", wI: "12kg", tip: "Isabella: 3s na descida (Excêntrica).", visual: "Foco no bumbum colado no banco.", activation: { primary: "Posterior de Coxa", secondary: "-" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Leg-Curl.gif" },
+                        { name: "Cadeira Abdutora", setsA: 3, setsI: 4, reps: "15-20", wA: "30kg", wI: "25kg", tip: "Tronco inclinado para frente.", visual: "Foca no glúteo médio (lateral do bumbum).", activation: { primary: "Glúteo Médio", secondary: "-" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/HiP-ABDUCTION-MACHINE.gif" }
                     ]
                 },
                 Rest2: {
-                    title: "Cardio & Flexibilidade",
+                    title: "Cardio & Mobilidade",
                     days: "Sábado",
-                    focus: "Cardio Moderado e Alongamento",
+                    focus: "Otimização Metabólica",
                     exercises: [
-                        { name: "Remo / Esteira", setsA: "20", setsI: "min", reps: "Médio", wA: "-", wI: "-", tip: "Aquecimento geral.", visual: "20 minutos para elevar a temperatura corporal antes dos alongamentos.", activation: { primary: "Cardio", secondary: "-" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/07/Run.gif" },
-                        { name: "Abdominal Infra", setsA: "3x", setsI: "3x", reps: "12-15", wA: "Corpo", wI: "Corpo", tip: "Tire o quadril do chão.", visual: "Enrole a bacia para cima. Não deixe a lombar arquear na descida.", activation: { primary: "Reto Abdominal (Inf)", secondary: "Flexores Quadril" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Lying-Leg-Raise.gif" }, 
-                        { name: "Face Pulls", setsA: "3x", setsI: "3x", reps: "15", wA: "Leve", wI: "Leve", tip: "Puxe para a testa.", visual: "Abra os cotovelos e gire as mãos para trás. Segure 1s. Essencial para postura.", activation: { primary: "Deltoide Posterior", secondary: "Manguito" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Face-Pull.gif" },
-                        { name: "Along. Posterior", setsA: "2x", setsI: "2x", reps: "45s", wA: "-", wI: "-", tip: "Relaxe na expiração.", visual: "Tente descer mais a cada vez que soltar o ar.", activation: { primary: "Isquiotibiais", secondary: "Lombar" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/05/Seated-Hamstring-Stretch.gif" },
-                        { name: "Along. Glúteo", setsA: "2x", setsI: "2x", reps: "45s", wA: "-", wI: "-", tip: "Abrace a perna.", visual: "Puxe a perna de base contra o peito para sentir o glúteo da perna cruzada.", activation: { primary: "Glúteo", secondary: "Piriforme" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/08/Lying-glute-stretch.gif" }, 
-                        { name: "Postura Criança", setsA: "2x", setsI: "2x", reps: "60s", wA: "-", wI: "-", tip: "Caminhe com os dedos.", visual: "Sente nos calcanhares e estique os braços à frente para descomprimir a coluna.", activation: { primary: "Lombar/Dorsal", secondary: "-" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2022/05/Balasana-Child-Pose.gif" } 
+                        { name: "Caminhada Intervalada", setsA: "20", setsI: "20", reps: "3/3 min", wA: "min", wI: "min", tip: "Cardio estratégico.", visual: "3 min lento / 3 min rápido.", activation: { primary: "Metabolismo", secondary: "-" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/07/Run.gif" },
+                        { name: "Alongamento Glúteo", setsA: "2x", setsI: "2x", reps: "45s", wA: "-", wI: "-", tip: "Relaxe e respire.", visual: "Melhora a recuperação para segunda.", activation: { primary: "Glúteo", secondary: "-" }, gif: "https://fitnessprogramer.com/wp-content/uploads/2021/08/Lying-glute-stretch.gif" }
                     ]
                 }
             };
@@ -215,11 +126,10 @@
             const cur = trainingData[activeTab];
 
             return (
-                <div className="max-w-md mx-auto p-4 pb-32 min-h-screen flex flex-col">
-                    
+                <div className="max-w-md mx-auto p-4 pb-32 min-h-screen flex flex-col text-slate-900">
                     <div className="mb-6 pt-4 text-center">
-                        <h1 className="text-2xl font-black text-slate-800 tracking-tighter uppercase leading-none">Planejamento de Treino</h1>
-                        <p className="text-xs font-bold text-slate-400 uppercase mt-1">Arthur & Isabella</p>
+                        <h1 className="text-2xl font-black text-slate-800 tracking-tighter uppercase leading-none italic">Treino Hub: Arthur & Isabella</h1>
+                        <p className="text-[10px] font-bold text-blue-600 uppercase mt-1 tracking-widest">Periodização Ondulatória v2.1</p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 mb-4">
@@ -228,66 +138,64 @@
                             const colors = { A1: 'blue', B1: 'indigo', Rest1: 'emerald', A2: 'sky', B2: 'purple', Rest2: 'orange' };
                             const isActive = activeTab === tab;
                             const c = colors[tab];
-                            
                             return (
                                 <button key={tab} onClick={() => setActiveTab(tab)} className={`p-3 rounded-xl font-black text-xs transition-all border ${isActive ? `bg-${c}-600 text-white border-${c}-600 shadow-md` : `bg-white text-slate-500 border-slate-200 shadow-sm`}`}>
-                                    {tab === 'Rest1' ? 'Descanso' : (tab === 'Rest2' ? 'Opcional' : tab)} 
+                                    {tab.startsWith('Rest') ? 'Extra' : tab} 
                                     <span className="opacity-70 font-normal ml-1">{labels[tab]}</span>
                                 </button>
                             );
                         })}
                     </div>
 
-                    <div className="bg-white rounded-2xl overflow-hidden shadow-lg border border-slate-100 flex-1">
-                        <div className="p-4 bg-slate-50 border-b border-slate-100">
-                            <h2 className="text-sm font-black text-slate-800 uppercase">{cur.title}</h2>
-                            <p className="text-[10px] text-slate-500 font-bold mt-0.5">{cur.focus}</p>
+                    <div className="bg-white rounded-3xl overflow-hidden shadow-xl border border-slate-100 flex-1">
+                        <div className="p-5 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+                            <div>
+                                <h2 className="text-sm font-black text-slate-800 uppercase italic">{cur.title}</h2>
+                                <p className="text-[9px] text-slate-400 font-bold mt-0.5 tracking-tight">{cur.focus}</p>
+                            </div>
+                            <div className="bg-white px-2 py-1 rounded-lg border border-slate-200 text-[9px] font-bold text-slate-400 uppercase">
+                                {cur.days}
+                            </div>
                         </div>
 
                         <div className="overflow-y-auto">
                             <table className="w-full text-left">
-                                <thead className="sticky top-0 bg-white z-10 shadow-sm">
+                                <thead className="sticky top-0 bg-white z-10">
                                     <tr className="text-[9px] text-slate-400 font-black uppercase border-b border-slate-100">
-                                        <th className="p-3 w-1/2">Atividade</th>
-                                        <th className="p-3 w-1/3">Meta</th>
-                                        <th className="p-3 text-center">Guia</th>
+                                        <th className="p-4 w-1/2">Exercício</th>
+                                        <th className="p-4 w-1/3">Meta</th>
+                                        <th className="p-4 text-center">Bio</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-50">
                                     {cur.exercises.map((ex, i) => (
                                         <tr key={i} className="hover:bg-slate-50 transition-colors">
-                                            <td className="p-3 align-middle">
-                                                <div className="text-xs font-extrabold text-slate-800 leading-tight">{ex.name}</div>
-                                                {(activeTab !== 'Rest1' && activeTab !== 'Rest2') && (
-                                                    <div className="text-[9px] text-slate-400 font-bold mt-1 bg-slate-100 inline-block px-1.5 py-0.5 rounded">
-                                                        {ex.setsA}A / {ex.setsI}I • {ex.reps} reps
-                                                    </div>
-                                                )}
-                                                {(activeTab === 'Rest1' || activeTab === 'Rest2') && (
-                                                    <div className="text-[9px] text-emerald-600 font-bold mt-1 bg-emerald-50 inline-block px-1.5 py-0.5 rounded">Recuperação</div>
-                                                )}
-                                            </td>
-                                            <td className="p-3 align-middle">
-                                                <div className="flex flex-col gap-1.5">
-                                                    {(activeTab !== 'Rest1' && activeTab !== 'Rest2') ? (
-                                                        <>
-                                                            <div className="flex items-center gap-1">
-                                                                <span className="text-[8px] font-black text-white bg-blue-500 w-4 h-4 rounded flex items-center justify-center">A</span>
-                                                                <input defaultValue={ex.wA.replace('kg','')} type="tel" className="w-full p-1 text-[11px] font-bold bg-slate-50 border border-slate-200 rounded text-center focus:ring-1 focus:ring-blue-500" />
-                                                            </div>
-                                                            <div className="flex items-center gap-1">
-                                                                <span className="text-[8px] font-black text-white bg-indigo-500 w-4 h-4 rounded flex items-center justify-center">I</span>
-                                                                <input defaultValue={ex.wI.replace('kg','')} type="tel" className="w-full p-1 text-[11px] font-bold bg-slate-50 border border-slate-200 rounded text-center focus:ring-1 focus:ring-indigo-500" />
-                                                            </div>
-                                                        </>
-                                                    ) : (
-                                                        <div className="text-[10px] font-bold text-slate-500 text-center bg-slate-50 p-2 rounded border border-slate-100">{ex.setsA} {ex.setsI}</div>
-                                                    )}
+                                            <td className="p-4 align-middle">
+                                                <div className="text-[11px] font-black text-slate-800 leading-tight uppercase italic">{ex.name}</div>
+                                                <div className="flex gap-1 mt-1.5">
+                                                    <span className="text-[8px] font-bold bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded uppercase border border-blue-100">
+                                                        {ex.setsA}x {ex.reps}
+                                                    </span>
+                                                    <span className="text-[8px] font-bold bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded uppercase border border-purple-100">
+                                                        {ex.setsI}x {ex.reps}
+                                                    </span>
                                                 </div>
                                             </td>
-                                            <td className="p-3 text-center align-middle">
-                                                <button onClick={() => setModalExercise(ex)} className="w-8 h-8 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100 active:scale-95 transition-all">
-                                                    👁️
+                                            <td className="p-4 align-middle">
+                                                <div className="flex flex-col gap-1.5">
+                                                    <div className="flex items-center gap-1.5">
+                                                        <span className="text-[8px] font-black text-white bg-blue-500 w-4 h-4 rounded-md flex items-center justify-center">A</span>
+                                                        <input defaultValue={ex.wA.replace('kg','')} type="tel" className="w-full p-1.5 text-[10px] font-bold bg-slate-50 border border-slate-200 rounded-lg text-center" />
+                                                    </div>
+                                                    <div className="flex items-center gap-1.5">
+                                                        <span className="text-[8px] font-black text-white bg-purple-500 w-4 h-4 rounded-md flex items-center justify-center">I</span>
+                                                        <input defaultValue={ex.wI.replace('kg','')} type="tel" className="w-full p-1.5 text-[10px] font-bold bg-slate-50 border border-slate-200 rounded-lg text-center" />
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="p-4 text-center align-middle">
+                                                <button onClick={() => setModalExercise(ex)} className="w-9 h-9 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center hover:bg-slate-200 active:scale-95 transition-all">
+                                                    ✨
                                                 </button>
                                             </td>
                                         </tr>
@@ -297,77 +205,55 @@
                         </div>
                     </div>
 
-                    {(activeTab !== 'Rest1' && activeTab !== 'Rest2') && (
-                        <div className="grid grid-cols-2 gap-2 mt-4">
-                            <div className="bg-sky-50 p-3 rounded-xl border border-sky-100">
-                                <h4 className="text-[9px] font-black text-sky-600 uppercase mb-1">ARTHUR</h4>
-                                <p className="text-[10px] font-bold text-sky-900 leading-tight">Esteira Inclinada</p>
-                                <p className="text-[9px] text-sky-700 mt-0.5">30min pós-treino</p>
-                            </div>
-                            <div className="bg-violet-50 p-3 rounded-xl border border-violet-100">
-                                <h4 className="text-[9px] font-black text-violet-600 uppercase mb-1">ISABELLA</h4>
-                                <p className="text-[10px] font-bold text-violet-900 leading-tight">Escada / Elíptico</p>
-                                <p className="text-[9px] text-violet-700 mt-0.5">20min pós-treino</p>
-                            </div>
+                    <div className="grid grid-cols-2 gap-3 mt-5">
+                        <div className="bg-slate-900 p-4 rounded-3xl border border-slate-800 shadow-lg">
+                            <h4 className="text-[8px] font-black text-blue-400 uppercase mb-1.5 tracking-tighter">Protocolo Arthur</h4>
+                            <p className="text-[10px] font-bold text-white leading-tight">Caminhada Intervalada</p>
+                            <p className="text-[9px] text-slate-400 mt-1">3/3 min • 30 min pós</p>
                         </div>
-                    )}
+                        <div className="bg-slate-900 p-4 rounded-3xl border border-slate-800 shadow-lg">
+                            <h4 className="text-[8px] font-black text-purple-400 uppercase mb-1.5 tracking-tighter">Protocolo Isabella</h4>
+                            <p className="text-[10px] font-bold text-white leading-tight">Caminhada Intervalada</p>
+                            <p className="text-[9px] text-slate-400 mt-1">3/3 min • 25 min pós</p>
+                        </div>
+                    </div>
 
                     {modalExercise && (
-                        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-6 animate-in fade-in duration-200">
+                        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-6">
                             <div className="absolute inset-0 modal-overlay" onClick={() => setModalExercise(null)}></div>
-                            <div className="relative bg-white w-full max-w-sm rounded-[2rem] shadow-2xl p-6 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto no-scrollbar">
-                                <div className="flex justify-between items-start mb-4">
-                                    <h3 className="text-lg font-black text-slate-800 leading-tight pr-4">{modalExercise.name}</h3>
-                                    <button onClick={() => setModalExercise(null)} className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 text-sm font-bold">✕</button>
+                            <div className="relative bg-white w-full max-w-sm rounded-[2.5rem] shadow-2xl p-7 max-h-[90vh] overflow-y-auto no-scrollbar border border-slate-100">
+                                <div className="flex justify-between items-start mb-5">
+                                    <h3 className="text-xl font-black text-slate-800 italic uppercase leading-tight pr-4">{modalExercise.name}</h3>
+                                    <button onClick={() => setModalExercise(null)} className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 text-sm font-bold">✕</button>
                                 </div>
                                 
-                                <div className="space-y-4">
+                                <div className="space-y-5">
                                     {modalExercise.gif && (
-                                        <div className="rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shadow-sm flex items-center justify-center min-h-[250px]">
-                                            <img 
-                                                src={modalExercise.gif} 
-                                                className="w-full max-h-[300px] object-contain" 
-                                                alt={modalExercise.name}
-                                                loading="lazy"
-                                                onError={handleImageError}
-                                            />
+                                        <div className="rounded-[2rem] overflow-hidden bg-slate-100 border border-slate-200 shadow-inner flex items-center justify-center min-h-[250px]">
+                                            <img src={modalExercise.gif} className="w-full max-h-[300px] object-contain mix-blend-multiply" alt={modalExercise.name} onError={handleImageError} />
                                         </div>
                                     )}
 
-                                    <div className="bg-slate-50 p-4 rounded-2xl">
-                                        <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-1">Execução</p>
-                                        <p className="text-xs text-slate-600 leading-relaxed font-medium">{modalExercise.visual}</p>
+                                    <div className="bg-blue-50/50 p-5 rounded-3xl border border-blue-100">
+                                        <p className="text-[9px] font-black text-blue-600 uppercase tracking-widest mb-2">Fundamento Científico</p>
+                                        <p className="text-[11px] text-slate-600 leading-relaxed font-bold italic">"{modalExercise.visual}"</p>
                                     </div>
-                                    <div className="bg-amber-50 p-4 rounded-2xl border border-amber-100">
-                                        <p className="text-[10px] font-black text-amber-700 uppercase mb-1">💡 Dica Pro</p>
-                                        <p className="text-xs text-amber-900 font-bold leading-relaxed">"{modalExercise.tip}"</p>
+                                    <div className="bg-amber-50 p-5 rounded-3xl border border-amber-100">
+                                        <p className="text-[9px] font-black text-amber-700 uppercase mb-2">💡 Dica de Ouro</p>
+                                        <p className="text-[11px] text-amber-900 font-black leading-relaxed">"{modalExercise.tip}"</p>
                                     </div>
-
-                                    {modalExercise.activation && (
-                                        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Ativação Muscular</p>
-                                            <div className="space-y-2">
-                                                <div className="flex items-start gap-2">
-                                                    <span className="text-xs mt-0.5">🎯</span>
-                                                    <div>
-                                                        <span className="text-[10px] font-bold text-slate-500 uppercase block">Principal</span>
-                                                        <span className="text-xs font-bold text-slate-800">{modalExercise.activation.primary}</span>
-                                                    </div>
-                                                </div>
-                                                <div className="flex items-start gap-2">
-                                                    <span className="text-xs mt-0.5">🤝</span>
-                                                    <div>
-                                                        <span className="text-[10px] font-bold text-slate-500 uppercase block">Auxiliar</span>
-                                                        <span className="text-xs text-slate-600">{modalExercise.activation.secondary}</span>
-                                                    </div>
-                                                </div>
+                                    <div className="p-5 rounded-3xl border border-slate-100 bg-slate-50/50">
+                                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3">Ativação Muscular</p>
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center text-lg">🎯</div>
+                                            <div>
+                                                <span className="text-[9px] font-bold text-slate-400 uppercase block">Foco Principal</span>
+                                                <span className="text-[11px] font-black text-slate-800 uppercase italic">{modalExercise.activation.primary}</span>
                                             </div>
                                         </div>
-                                    )}
+                                    </div>
                                 </div>
-                                <button onClick={() => setModalExercise(null)} className="w-full mt-6 py-3.5 bg-slate-900 text-white text-xs font-black uppercase tracking-widest rounded-xl shadow-lg active:scale-95 transition-all">
-                                    Fechar
-                                </button>
+                                <button onClick={() => setModalExercise(null)} className="w-full mt-8 py-4 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-xl active:scale-95 transition-all italic">Concluir Exercício</button>
                             </div>
                         </div>
                     )}
