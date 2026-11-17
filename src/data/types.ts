@@ -54,6 +54,8 @@ export interface Exercise {
   why: string
   /** Notas pessoais. */
   notes?: Partial<Record<PersonId, string>>
+  /** Alertas de saúde/lesão por pessoa (aparecem em destaque). */
+  caution?: Partial<Record<PersonId, string>>
   /** Termo de busca para vídeo de demonstração. */
   video?: string
   /** Indica uma novidade da versão 3 (aparece com selo "novo"). */
@@ -72,6 +74,20 @@ export interface TrainingDay {
   focus: string
   warmup: string[]
   exercises: Exercise[]
+  /** Dia opcional (ex.: caminhada nos dias sem musculação). */
+  optional?: boolean
   /** Cardio opcional depois do treino de força. */
   finisher?: { title: string; detail: string; arthur: string; isa: string }
+}
+
+export interface Phase {
+  id: number
+  name: string
+  /** Semana inicial e final (inclusive) a partir da data de início. */
+  from: number
+  to: number
+  /** Teto de séries por exercício nesta fase. */
+  maxSets: number
+  rir: string
+  summary: string
 }

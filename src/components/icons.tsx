@@ -43,3 +43,9 @@ export const IconFlame = (p: SVGProps<SVGSVGElement>) => (
 export const IconArrowUp = (p: SVGProps<SVGSVGElement>) => (
   <svg {...base(p)}><path d="M12 19V5M6 11l6-6 6 6" /></svg>
 )
+export const IconDumbbell = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}><path d="M6 7v10M3.5 9.5v5M18 7v10M20.5 9.5v5M6 12h12" /></svg>
+)
+export const IconChart = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}><path d="M4 19h16M5 15l4-4 3 3 6-7" /></svg>
+)
