@@ -9,6 +9,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  actions: read
 
 concurrency:
   group: pages
@@ -37,5 +38,21 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # O Pages deste repositório ainda está em "Deploy from a branch", então o
+      # GitHub também roda o build legado ("pages build and deployment"), que
+      # publicaria o código-fonte sem compilar. Esperamos ele terminar para que
+      # esta publicação (a do app compilado) seja sempre a última e a que vale.
+      - name: Esperar o build legado do Pages terminar
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 60); do
+            pending=$(gh api "repos/${{ github.repository }}/actions/runs?head_sha=${{ github.sha }}&per_page=50" \
+              --jq '[.workflow_runs[] | select(.name == "pages build and deployment" and .status != "completed")] | length')
+            if [ "$pending" = "0" ]; then echo "Nenhum build legado pendente."; exit 0; fi
+            echo "Build legado ainda rodando ($pending). Aguardando..."
+            sleep 10
+          done
+          echo "Tempo esgotado esperando o build legado; publicando mesmo assim."
       - id: deployment
         uses: actions/deploy-pages@v4
