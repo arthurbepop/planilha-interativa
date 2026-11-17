@@ -90,25 +90,37 @@ export const todayISO = () => {
   return new Date(d.getTime() - off * 60_000).toISOString().slice(0, 10)
 }
 
+const COLL = 'treinohub:c:'
+const isData = (k: string) => k.startsWith(COLL) && !k.startsWith(COLL + 'uploaded:') && k !== COLL + 'migrated'
+
 /** Exporta tudo que o app guardou, para backup. */
 export function exportAll(): string {
   const data: Record<string, unknown> = {}
   try {
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i)
-      if (k?.startsWith(PREFIX)) data[k.slice(PREFIX.length)] = JSON.parse(localStorage.getItem(k)!)
+      if (k && isData(k)) data[k.slice(COLL.length)] = JSON.parse(localStorage.getItem(k)!)
     }
   } catch {
     /* ignore */
   }
-  return JSON.stringify({ app: 'treino-hub', version: 3, exportedAt: new Date().toISOString(), data }, null, 2)
+  return JSON.stringify({ app: 'treino-hub', version: 5, exportedAt: new Date().toISOString(), collections: data }, null, 2)
 }
 
+/** Restaura um backup (mescla com o que existe). Com login, os itens novos sobem para a nuvem. */
 export function importAll(json: string): boolean {
   try {
     const parsed = JSON.parse(json)
-    if (parsed?.app !== 'treino-hub' || typeof parsed.data !== 'object') return false
-    for (const [k, v] of Object.entries(parsed.data)) write(k, v)
+    if (parsed?.app !== 'treino-hub' || typeof parsed.collections !== 'object') return false
+    for (const [name, map] of Object.entries(parsed.collections as Record<string, object>)) {
+      const cur = JSON.parse(localStorage.getItem(COLL + name) ?? '{}')
+      localStorage.setItem(COLL + name, JSON.stringify({ ...cur, ...map }))
+    }
+    // força o reenvio do que não existir na nuvem
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const k = localStorage.key(i)
+      if (k?.startsWith(COLL + 'uploaded:')) localStorage.removeItem(k)
+    }
     return true
   } catch {
     return false

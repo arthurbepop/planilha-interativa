@@ -6,7 +6,14 @@ Planilha de treino interativa (PWA) para treinar a dois. Programa **Recomeço**:
 - **Progresso:** peso com média de 7 dias, ritmo semanal (% do peso), projeção da meta, cintura e relação cintura/altura.
 - **Guia:** fases, cuidados de saúde, princípios, volume semanal, histórico, referências e backup.
 
-Tudo fica salvo no celular e funciona offline.
+Funciona offline e, com login, **sincroniza em tempo real entre os dois celulares** (Firebase).
+
+## Sincronização (Firebase)
+
+- `src/lib/sync.tsx` — login (uma conta do casal, usada nos dois celulares) e coleções sincronizadas. Cada registro é um documento separado em `households/{uid}/{coleção}/{id}`, então edições simultâneas não se sobrescrevem. O cache offline do Firestore guarda tudo sem internet.
+- `src/lib/firebase-config.ts` — configuração do app Web do Firebase (valores públicos). Com `null`, o app funciona só no aparelho.
+- `firestore.rules` — cada conta só acessa os próprios dados. Cole no Console → Firestore → Regras.
+- Teste local com emuladores: `VITE_FIREBASE_EMULATOR=1 npm run build` (Auth na porta 9099, Firestore na 8080).
 
 ## Editar os treinos
 

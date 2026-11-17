@@ -6,6 +6,7 @@ import { people, relativeDays, weekdayLong } from '../lib/format'
 import { exportAll, importAll, todayISO, type HistoryEntry } from '../lib/store'
 import { muscleLabel } from './BodyMap'
 import { tone } from './ExerciseCard'
+import { SyncCard } from './SyncCard'
 
 /** Séries semanais por músculo: principal conta 1, secundário conta 0,5. */
 function weeklyVolume(p: PersonId, phase: Phase) {
@@ -68,6 +69,7 @@ export function GuideView({ history, defaultPerson, phase, week, startDate, setS
 
   return (
     <div className="space-y-4">
+      <SyncCard />
       <Card>
         <Kicker>o plano</Kicker>
         <h2 className="font-display text-3xl font-extrabold uppercase leading-none tracking-tight">Recomeço · 3 fases</h2>
@@ -225,7 +227,7 @@ export function GuideView({ history, defaultPerson, phase, week, startDate, setS
 
       <section className="rounded-[28px] border border-line bg-surface p-4">
         <h3 className="font-display text-lg font-bold uppercase tracking-tight">Backup</h3>
-        <p className="mt-1 text-[13px] text-muted">Os dados ficam salvos só neste celular. Exporte de vez em quando — ou para passar as cargas para outro aparelho.</p>
+        <p className="mt-1 text-[13px] text-muted">Uma cópia de tudo em arquivo, para guardar ou levar para outro aparelho.</p>
         <div className="mt-3 grid grid-cols-2 gap-2">
           <button onClick={download} className="rounded-2xl bg-surface-2 py-3 font-display text-sm font-bold uppercase tracking-wider active:scale-95">
             Exportar

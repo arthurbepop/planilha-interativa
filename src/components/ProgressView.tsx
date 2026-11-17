@@ -10,11 +10,12 @@ import { IconChevron, IconX } from './icons'
 interface Props {
   order: PersonId[]
   measures: Record<PersonId, Measure[]>
-  setMeasures: (fn: (m: Record<PersonId, Measure[]>) => Record<PersonId, Measure[]>) => void
+  /** Grava (ou apaga, com `delete: true`) o registro do dia. */
+  putMeasure: (p: PersonId, m: Measure | { date: string; delete: true }) => void
   profiles: Record<PersonId, Profile>
-  setProfiles: (fn: (m: Record<PersonId, Profile>) => Record<PersonId, Profile>) => void
-  bp: BloodPressure[]
-  setBp: (fn: (b: BloodPressure[]) => BloodPressure[]) => void
+  putProfile: (p: PersonId, prof: Profile) => void
+  bp: [string, BloodPressure][]
+  deleteBp: (id: string) => void
 }
 
 const num = (s: string) => {
@@ -36,7 +37,7 @@ export function ProgressView(props: Props) {
   )
 }
 
-function PersonProgress({ p, measures, setMeasures, profiles, setProfiles, bp, setBp }: Props & { p: PersonId }) {
+function PersonProgress({ p, measures, putMeasure, profiles, putProfile, bp, deleteBp }: Props & { p: PersonId }) {
   const t = tone[p]
   const name = people.find((x) => x.id === p)!.name
   const list = measures[p] ?? []
@@ -60,15 +61,8 @@ function PersonProgress({ p, measures, setMeasures, profiles, setProfiles, bp, s
     const wv = num(weight)
     const cv = num(wst)
     if (wv == null && cv == null) return
-    setMeasures((m) => {
-      const arr = [...(m[p] ?? [])]
-      const i = arr.findIndex((x) => x.date === date)
-      const entry: Measure = { ...(i >= 0 ? arr[i] : { date }), ...(wv != null ? { weight: wv } : {}), ...(cv != null ? { waist: cv } : {}) }
-      if (i >= 0) arr[i] = entry
-      else arr.push(entry)
-      arr.sort((a, b) => a.date.localeCompare(b.date))
-      return { ...m, [p]: arr }
-    })
+    const existing = list.find((x) => x.date === date)
+    putMeasure(p, { ...(existing ?? {}), date, ...(wv != null ? { weight: wv } : {}), ...(cv != null ? { waist: cv } : {}) })
     setWeight('')
     setWst('')
   }
@@ -101,9 +95,9 @@ function PersonProgress({ p, measures, setMeasures, profiles, setProfiles, bp, s
 
       {showGoals && (
         <div className="anim-fade mt-3 grid grid-cols-3 gap-2 rounded-2xl bg-surface-2 p-3">
-          <Field label="Altura (cm)" value={prof.height} onChange={(v) => setProfiles((m) => ({ ...m, [p]: { ...m[p], height: v } }))} />
-          <Field label="Peso-meta" value={prof.goalWeight} onChange={(v) => setProfiles((m) => ({ ...m, [p]: { ...m[p], goalWeight: v } }))} />
-          <Field label="Cintura-meta" value={prof.goalWaist} onChange={(v) => setProfiles((m) => ({ ...m, [p]: { ...m[p], goalWaist: v } }))} />
+          <Field label="Altura (cm)" value={prof.height} onChange={(v) => putProfile(p, { ...prof, height: v })} />
+          <Field label="Peso-meta" value={prof.goalWeight} onChange={(v) => putProfile(p, { ...prof, goalWeight: v })} />
+          <Field label="Cintura-meta" value={prof.goalWaist} onChange={(v) => putProfile(p, { ...prof, goalWaist: v })} />
           <p className="col-span-3 text-[12px] leading-snug text-muted">
             {p === 'arthur' ? 'Sugestão: peso-meta 85 kg (−15 kg), revisado a cada fase.' : 'Recomposição: a cintura e as cargas contam mais que a balança. Defina uma cintura-meta.'} A altura serve para calcular a relação cintura/altura.
           </p>
@@ -204,7 +198,7 @@ function PersonProgress({ p, measures, setMeasures, profiles, setProfiles, bp, s
                   <span className="flex-1 text-muted">{m.waist != null ? `${fmtLoad(m.waist)} cm` : ''}</span>
                   <button
                     aria-label={`Apagar registro de ${fmtDate(m.date)}`}
-                    onClick={() => setMeasures((all) => ({ ...all, [p]: (all[p] ?? []).filter((x) => x.date !== m.date) }))}
+                    onClick={() => putMeasure(p, { date: m.date, delete: true })}
                     className="grid size-8 place-items-center rounded-full text-muted"
                   >
                     <IconX width={14} />
@@ -216,7 +210,7 @@ function PersonProgress({ p, measures, setMeasures, profiles, setProfiles, bp, s
         </div>
       )}
 
-      {p === 'arthur' && <BpLog bp={bp} setBp={setBp} />}
+      {p === 'arthur' && <BpLog bp={bp} deleteBp={deleteBp} />}
     </section>
   )
 }
@@ -354,23 +348,23 @@ function WeightChart({ p, raw, tr, goal }: { p: PersonId; raw: { date: string; v
   )
 }
 
-function BpLog({ bp, setBp }: { bp: BloodPressure[]; setBp: Props['setBp'] }) {
+function BpLog({ bp, deleteBp }: { bp: Props['bp']; deleteBp: Props['deleteBp'] }) {
   const last = bp.slice(-5).reverse()
   if (bp.length === 0) return null
   return (
     <div className="mt-4 rounded-2xl bg-surface-2 p-3">
       <div className="font-mono text-[10px] uppercase tracking-widest text-muted">pressão · últimas medições</div>
       <ul className="mt-2 space-y-1">
-        {last.map((b, i) => {
+        {last.map(([id, b]) => {
           const a = bpAdvice(b.sys, b.dia)
           return (
-            <li key={b.date + i} className="flex items-center gap-3 font-mono text-sm tabular">
+            <li key={id} className="flex items-center gap-3 font-mono text-sm tabular">
               <span className="w-20 whitespace-nowrap text-muted">{fmtDate(b.date)}</span>
               <span className="flex-1">
                 {b.sys}/{b.dia}
               </span>
               <span className={`size-2 rounded-full ${a.level === 'good' ? 'bg-arthur' : a.level === 'ok' ? 'bg-muted' : 'bg-signal'}`} aria-label={a.level} />
-              <button aria-label="Apagar medição" onClick={() => setBp((all) => all.filter((x) => x !== b))} className="grid size-7 place-items-center text-muted">
+              <button aria-label="Apagar medição" onClick={() => deleteBp(id)} className="grid size-7 place-items-center text-muted">
                 <IconX width={12} />
               </button>
             </li>

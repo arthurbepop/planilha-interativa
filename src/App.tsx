@@ -15,13 +15,14 @@ import {
   todayISO,
   usePersistent,
   type BloodPressure,
+  type ExerciseLog,
   type HistoryEntry,
-  type Loads,
   type Measure,
   type Profile,
   type SetLog,
   type Viewer,
 } from './lib/store'
+import { useCollection, useSync } from './lib/sync'
 
 const weekOrder = [1, 2, 3, 4, 5, 6, 0]
 const dayFor = (weekday: number) => program.find((d) => d.weekday === weekday)!
@@ -33,24 +34,37 @@ export default function App() {
 
   const [tab, setTab] = usePersistent<Tab>('tab', 'treino')
   const [viewer, setViewer] = usePersistent<Viewer>('viewer', 'ambos')
-  const [loads, setLoads] = usePersistent<Loads>('loads', {})
-  const [setlog, setSetlog] = usePersistent<Record<string, SetLog>>('setlog', {})
-  const [history, setHistory] = usePersistent<HistoryEntry[]>('history', [])
-  const [startDate, setStartDate] = usePersistent<string | null>('startDate', null)
-  const [profiles, setProfiles] = usePersistent<Record<PersonId, Profile>>('profiles', { arthur: { goalWeight: 85 }, isa: {} })
-  const [measures, setMeasures] = usePersistent<Record<PersonId, Measure[]>>('measures', { arthur: [], isa: [] })
-  const [bp, setBp] = usePersistent<BloodPressure[]>('bp', [])
+  // dados sincronizados entre os celulares (ver lib/sync.tsx)
+  const [loads, putLoad] = useCollection<number>('loads')
+  const [setlogAll, putSet] = useCollection<ExerciseLog>('setlog')
+  const [historyMap, putHistory] = useCollection<HistoryEntry>('history')
+  const [meta, putMeta] = useCollection<string>('meta')
+  const [profileMap, putProfile] = useCollection<Profile>('profiles')
+  const [measureMap, putMeasure] = useCollection<Measure & { person: PersonId }>('measures')
+  const [bpMap, putBp] = useCollection<BloodPressure>('bp')
+  const sync = useSync()
+
+  const history = useMemo(() => Object.values(historyMap).sort((a, b) => a.date.localeCompare(b.date)), [historyMap])
+  const startDate = meta.startDate ?? null
+  const setStartDate = (d: string) => putMeta('startDate', d)
+  const profiles: Record<PersonId, Profile> = { arthur: { goalWeight: 85, ...profileMap.arthur }, isa: { ...profileMap.isa } }
+  const measures = useMemo(() => {
+    const out: Record<PersonId, Measure[]> = { arthur: [], isa: [] }
+    for (const m of Object.values(measureMap)) out[m.person]?.push(m)
+    for (const k of Object.keys(out) as PersonId[]) out[k].sort((a, b) => a.date.localeCompare(b.date))
+    return out
+  }, [measureMap])
+  const bp = useMemo(() => Object.entries(bpMap).sort(([a], [b]) => a.localeCompare(b)), [bpMap])
   const [dayId, setDayId] = useState(() => dayFor(todayWeekday).id)
   const [sheet, setSheet] = useState<Exercise | null>(null)
   const [timer, setTimer] = useState<Timer | null>(null)
   const [warmOpen, setWarmOpen] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
 
-  // o registro de séries vale só para o dia de hoje
+  // o registro de séries vale só para o dia de hoje (o histórico guarda o resto)
   useEffect(() => {
-    if (Object.keys(setlog).some((k) => !k.startsWith(today)))
-      setSetlog((s) => Object.fromEntries(Object.entries(s).filter(([k]) => k.startsWith(today))))
-  }, [today, setlog, setSetlog])
+    for (const k of Object.keys(setlogAll)) if (!k.startsWith(today)) putSet(k, null)
+  }, [today, setlogAll, putSet])
 
   useEffect(() => {
     if (!toast) return
@@ -67,27 +81,24 @@ export default function App() {
   const day = program.find((d) => d.id === dayId)!
   const who: PersonId[] = viewer === 'ambos' ? ['arthur', 'isa'] : [viewer]
   const progKey = `${today}|${day.id}`
-  const log = setlog[progKey] ?? {}
+  const log: SetLog = useMemo(() => {
+    const out: SetLog = {}
+    const pre = progKey + '|'
+    for (const [k, v] of Object.entries(setlogAll)) if (k.startsWith(pre)) out[k.slice(pre.length)] = v
+    return out
+  }, [setlogAll, progKey])
 
   const lastSession = useMemo(() => [...history].reverse().find((h) => h.dayId === day.id && h.date !== today), [history, day.id, today])
   const savedToday = history.some((h) => h.dayId === day.id && h.date === today)
 
   const getLoad = (ex: Exercise, p: PersonId) => loads[slot(ex.id, p)] ?? ex[p].load
   const setLoad = (ex: Exercise, p: PersonId, v: number | null) =>
-    setLoads((l) => {
-      const next = { ...l }
-      if (v == null || Number.isNaN(v)) delete next[slot(ex.id, p)]
-      else next[slot(ex.id, p)] = Math.round(v * 100) / 100
-      return next
-    })
+    putLoad(slot(ex.id, p), v == null || Number.isNaN(v) ? null : Math.round(v * 100) / 100)
 
   const setReps = (ex: Exercise, p: PersonId, reps: (number | null)[], started: boolean) => {
     const k = slot(ex.id, p)
     const prev = log[k]
-    setSetlog((s) => ({
-      ...s,
-      [progKey]: { ...(s[progKey] ?? {}), [k]: { reps, load: prev && prev.reps.length ? prev.load : getLoad(ex, p) } },
-    }))
+    putSet(`${progKey}|${k}`, reps.length ? { reps, load: prev && prev.reps.length ? prev.load : getLoad(ex, p) } : null)
     if (started && ex.rest > 0 && reps.length < setsFor(ex, p, phase)) {
       setTimer({ endsAt: Date.now() + ex.rest * 1000, total: ex.rest, label: ex.name })
     }
@@ -114,7 +125,7 @@ export default function App() {
   const finish = () => {
     const entries: HistoryEntry['entries'] = {}
     for (const [k, v] of Object.entries(log)) if (v.reps.length) entries[k] = { load: v.load, sets: v.reps.length, reps: v.reps }
-    setHistory((h) => [...h.filter((x) => !(x.date === today && x.dayId === day.id)), { date: today, dayId: day.id, entries }].slice(-300))
+    putHistory(`${today}|${day.id}`, { date: today, dayId: day.id, entries })
     setToast(savedToday ? 'Registro atualizado ✓' : day.kind === 'forca' ? `${day.code} registrado ✓ Bom trabalho!` : 'Atividade registrada ✓')
     setTimer(null)
   }
@@ -129,8 +140,15 @@ export default function App() {
       {/* ── cabeçalho */}
       <header className="flex items-end justify-between gap-4">
         <div>
-          <p className="font-mono text-[11px] uppercase tracking-widest text-muted">
+          <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-muted">
             {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
+            {sync.status !== 'local' && sync.status !== 'loading' && (
+              <button
+                onClick={() => setTab('guia')}
+                aria-label={sync.status === 'synced' ? 'Sincronizado' : sync.status === 'offline' ? 'Offline' : 'Entrar para sincronizar'}
+                className={`size-2 rounded-full ${sync.status === 'synced' ? 'bg-arthur' : sync.status === 'offline' ? 'bg-signal' : 'bg-muted'}`}
+              />
+            )}
           </p>
           <h1 className="mt-0.5 font-display text-[40px] font-extrabold uppercase leading-[0.85] tracking-tight">
             Treino<span className="text-signal">/</span>Hub
@@ -246,7 +264,7 @@ export default function App() {
             ) : null}
           </section>
 
-          {day.kind === 'forca' && who.includes('arthur') && <BpCheck bp={bp} setBp={setBp} today={today} />}
+          {day.kind === 'forca' && who.includes('arthur') && <BpCheck bp={bp.map(([, b]) => b)} add={(b) => putBp(`${b.date}-${Date.now()}`, b)} today={today} />}
 
           {day.kind === 'forca' && (
             <div className="mt-3 grid grid-cols-[auto_1fr] items-center gap-4 rounded-3xl border border-line bg-surface p-4">
@@ -305,7 +323,15 @@ export default function App() {
 
       {tab === 'progresso' && (
         <div className="mt-4">
-          <ProgressView order={order} measures={measures} setMeasures={setMeasures} profiles={profiles} setProfiles={setProfiles} bp={bp} setBp={setBp} />
+          <ProgressView
+            order={order}
+            measures={measures}
+            putMeasure={(p, m) => putMeasure(`${p}|${m.date}`, 'delete' in m ? null : { ...m, person: p })}
+            profiles={profiles}
+            putProfile={(p, prof) => putProfile(p, prof)}
+            bp={bp}
+            deleteBp={(id) => putBp(id, null)}
+          />
         </div>
       )}
 
@@ -375,7 +401,7 @@ function Stat({ label, value }: { label: string; value: string | number }) {
 }
 
 /** Medição de pressão do Arthur antes do treino de força. */
-function BpCheck({ bp, setBp, today }: { bp: BloodPressure[]; setBp: (fn: (b: BloodPressure[]) => BloodPressure[]) => void; today: string }) {
+function BpCheck({ bp, add, today }: { bp: BloodPressure[]; add: (b: BloodPressure) => void; today: string }) {
   const todays = bp.filter((b) => b.date === today).at(-1)
   const [sys, setSys] = useState('')
   const [dia, setDia] = useState('')
@@ -413,7 +439,7 @@ function BpCheck({ bp, setBp, today }: { bp: BloodPressure[]; setBp: (fn: (b: Bl
         <button
           disabled={!valid}
           onClick={() => {
-            setBp((b) => [...b, { date: today, sys: s, dia: d }].slice(-200))
+            add({ date: today, sys: s, dia: d })
             setSys('')
             setDia('')
             setEditing(false)
