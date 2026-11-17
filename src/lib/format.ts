@@ -20,15 +20,15 @@ export const fmtLoad = (n: number) => (Number.isInteger(n) ? String(n) : n.toFix
 export const repsFor = (ex: Exercise, p: PersonId) => ex[p].reps ?? ex.reps
 
 /** Duração estimada em minutos (a maior entre os dois). */
-export function estimateMinutes(day: TrainingDay, who: PersonId[]) {
+export function estimateMinutes(day: TrainingDay, who: PersonId[], maxSets = 99) {
   return Math.max(
     0,
     ...who.map((p) =>
       day.exercises.reduce((acc, ex) => {
-        const sets = ex[p].sets
+        const sets = Math.min(ex[p].sets, maxSets)
         if (!sets) return acc
         if (ex.unit === 'tempo') return acc + (parseInt(repsFor(ex, p)) || 0) * 60
-        return acc + sets * (ex.rest + 45)
+        return acc + sets * (ex.rest + (/\bmin\b/.test(ex.reps) ? 90 : 45))
       }, 0),
     ),
   ) / 60

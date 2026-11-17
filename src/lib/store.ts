@@ -50,19 +50,36 @@ export function usePersistent<T>(key: string, fallback: T) {
 export const slot = (exerciseId: string, person: PersonId) => `${exerciseId}:${person}`
 
 export type Loads = Record<string, number>
-export type SetsDone = Record<string, number>
-
-export interface Session {
-  date: string
-  dayId: string
-  done: SetsDone
+/** Registro de um exercício no treino do dia: repetições por série (null = sem contagem) e a carga usada. */
+export interface ExerciseLog {
+  reps: (number | null)[]
+  load: number | null
 }
+export type SetLog = Record<string, ExerciseLog>
 
 export interface HistoryEntry {
   date: string
   dayId: string
-  /** slot → { carga, séries feitas } */
-  entries: Record<string, { load: number | null; sets: number }>
+  /** slot → { carga, séries feitas, repetições por série } */
+  entries: Record<string, { load: number | null; sets: number; reps?: (number | null)[] }>
+}
+
+export interface Profile {
+  height?: number
+  goalWeight?: number
+  goalWaist?: number
+}
+
+export interface Measure {
+  date: string
+  weight?: number
+  waist?: number
+}
+
+export interface BloodPressure {
+  date: string
+  sys: number
+  dia: number
 }
 
 export type Viewer = 'ambos' | PersonId
