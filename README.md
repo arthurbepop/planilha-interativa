@@ -20,8 +20,9 @@ npm run dev
 
 ## Publicação (GitHub Pages)
 
-O workflow `.github/workflows/deploy.yml` compila e publica a cada push no `main`.
-Configuração única: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+O workflow `.github/workflows/deploy.yml` compila e publica a cada push no `main` (também dá para rodar manualmente em *Actions → Publicar no GitHub Pages → Run workflow*).
+
+Funciona com a configuração atual do Pages ("Deploy from a branch"): o workflow espera o build automático do GitHub terminar e publica o app compilado por cima. Opcional, para deixar só uma publicação por push: *Settings → Pages → Source: GitHub Actions*.
 
 ## Stack
 
