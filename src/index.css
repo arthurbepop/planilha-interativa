@@ -1,0 +1,154 @@
+@import '@fontsource/barlow-condensed/latin-600.css';
+@import '@fontsource/barlow-condensed/latin-700.css';
+@import '@fontsource/barlow-condensed/latin-800.css';
+@import '@fontsource/barlow/latin-400.css';
+@import '@fontsource/barlow/latin-500.css';
+@import '@fontsource/barlow/latin-600.css';
+@import '@fontsource-variable/jetbrains-mono';
+@import 'tailwindcss';
+
+/*
+ * Paleta "giz & ferro": grafite quente no escuro, papel no claro.
+ * Arthur = lima, Isa = lilás, sinal (músculos/timer) = laranja.
+ */
+:root {
+  --bg: #f4f1ea;
+  --surface: #fffdf8;
+  --surface-2: #ebe6db;
+  --line: #ddd6c8;
+  --ink: #1b1916;
+  --muted: #6f685e;
+  --arthur: #4a7a00;
+  --arthur-soft: #e3efc9;
+  --isa: #6a4fd6;
+  --isa-soft: #e7e1fb;
+  --signal: #d9461a;
+  --signal-soft: #f9dccf;
+  --body: #d9d2c4;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121110;
+    --surface: #1b1917;
+    --surface-2: #24211e;
+    --line: #2f2b27;
+    --ink: #f1ece2;
+    --muted: #9b9389;
+    --arthur: #c6f24e;
+    --arthur-soft: #2a3313;
+    --isa: #b9a4ff;
+    --isa-soft: #29233f;
+    --signal: #ff6a3d;
+    --signal-soft: #3a1f15;
+    --body: #34302b;
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-arthur: var(--arthur);
+  --color-arthur-soft: var(--arthur-soft);
+  --color-isa: var(--isa);
+  --color-isa-soft: var(--isa-soft);
+  --color-signal: var(--signal);
+  --color-signal-soft: var(--signal-soft);
+  --font-display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --font-sans: 'Barlow', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    overscroll-behavior-y: none;
+    min-height: 100dvh;
+  }
+  button {
+    cursor: pointer;
+  }
+  :focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: 2px;
+  }
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* textura sutil de "giz" no fundo */
+.grain {
+  background-image: radial-gradient(color-mix(in oklab, var(--ink) 6%, transparent) 1px, transparent 1px);
+  background-size: 4px 4px;
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes pop {
+  0% {
+    transform: scale(0.85);
+  }
+  60% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.anim-sheet {
+  animation: sheet-in 320ms cubic-bezier(0.2, 0.9, 0.25, 1);
+}
+.anim-fade {
+  animation: fade-in 200ms ease-out;
+}
+.anim-pop {
+  animation: pop 260ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-sheet,
+  .anim-fade,
+  .anim-pop {
+    animation: none;
+  }
+}
